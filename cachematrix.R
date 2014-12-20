@@ -5,33 +5,43 @@
 
 makeCacheMatrix <- function(x = matrix()) {
 
-  m <- NULL
+  local <- NULL
   set <- function(y) {
     x <<- y
-    m <<- NULL
+    local <<- NULL
   }
   get <- function() x
-  setinversematrix <- function(solve) m <<- solve
-  getmean <- function() m
+  
+  setinversematrix <- function(solve) local <<- solve
+  getinversematrix <- function() local
+  
   list(set = set, get = get,
        setinversematrix = setinversematrix,
-       getmean = getmean)
+       getinversematrix = getinversematrix)
 }
 
 zz<-makeCacheMatrix (matrix(rnorm(9),3,3))
+
 ## Write a short comment describing this function
 
 cacheSolve <- function(x, ...) {
-  m <- x$getmean()
-  if(!is.null(m)) {
-    message("getting cached data")
-    return(m)
+  local <- x$getinversematrix()
+  if(!is.null(local)) {
+    message("we have the cache of this matrix:")
+    rawmatrix <- x$get()
+    print (rawmatrix)
+    message ('and here it is!')
+    return(local)
   }
-  data <- x$get()
-  m <- solve(data, ...)
-  x$setinversematrix(m)
-  m
+  rawmatrix <- x$get()
+  local <- solve(rawmatrix, ...)
+  x$setinversematrix(local)
+  message ('no cache was found for matrix...')
+  print (rawmatrix)
+  message ('so we calculated it here!')
+  local
   ## Return a matrix that is the inverse of 'x'
 }
 
 cacheSolve(zz)
+
