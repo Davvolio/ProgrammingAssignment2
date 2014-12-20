@@ -8,17 +8,17 @@
 
 makeCacheMatrix <- function(x = matrix()) {
 
-  local <- NULL # local is omnipresent variable that will transport the values between the functions, according to the function called
-  set <- function(y) { # here we set the matrix "x"
+  local <- NULL                                       # local is omnipresent variable that will transport the values between the functions, according to the function called
+  set <- function(y) {                                # here we set the matrix "x"
     x <<- y
     local <<- NULL
   }
-  get <- function() x # here we get the meaning of matrix "x" when time comes to inversion
+  get <- function() x                                 # here we get the meaning of matrix "x" when time comes to inversion
   
   setinversematrix <- function(solve) local <<- solve #after inversion put new matrix here
-  getinversematrix <- function() local #calling the inverted matrix from cache if original matrix was already inverted before
+  getinversematrix <- function() local                #calling the inverted matrix from cache if original matrix was already inverted before
   
-  list(set = set, get = get, # creating a list of 4 functions
+  list(set = set, get = get,                          # creating a list of 4 functions
        setinversematrix = setinversematrix,
        getinversematrix = getinversematrix)
 }
@@ -33,20 +33,20 @@ makeCacheMatrix <- function(x = matrix()) {
 ## For example if "zz<-makeCacheMatrix (matrix(rnorm(9),3,3))" then "cacheSolve(zz)"
 
 cacheSolve <- function(x, ...) {
-  local <- x$getinversematrix() # first step, check the inverted matrix
-  if(!is.null(local)) { # if there is cached matrix came here
-    message("we have the cache of this matrix:") #message to show original matrix
-    rawmatrix <- x$get() # getting original matrix from makeCacheMatrix function
+  local <- x$getinversematrix()                  # first step, check the inverted matrix
+  if(!is.null(local)) {                          # if there is cached matrix came here
+    message("we have the cache of this matrix:") # message to show original matrix
+    rawmatrix <- x$get()                         # getting original matrix from makeCacheMatrix function
     print (rawmatrix)
     message ('and here it is!')
-    return(local) # returning the inverted matrix from cache
+    return(local)                                # returning the inverted matrix from cache
   }
-  rawmatrix <- x$get() #came here if no cache found, for inversion take original matrix from makeCacheMatrix function
-  local <- solve(rawmatrix, ...) # inverse matrix using the recommened "solve" function
-  x$setinversematrix(local) # putting to cache inverted matrix in makeCacheMatrix function
+  rawmatrix <- x$get()                           # came here if no cache found, for inversion take original matrix from makeCacheMatrix function
+  local <- solve(rawmatrix, ...)                 # inverse matrix using the recommened "solve" function
+  x$setinversematrix(local)                      # putting to cache inverted matrix in makeCacheMatrix function
   message ('no cache was found for matrix...')
   print (rawmatrix)
   message ('so we calculated it here!')
-  local # Return a matrix that is the inverse of 'x'
+  local                                          # Return a matrix that is the inverse of 'x'
 
 }
